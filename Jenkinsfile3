@@ -5,6 +5,7 @@ pipeline {
         MAVEN_IMAGE_NAME = 'mymaven'
         TOMCAT_IMAGE_NAME = 'mytomcat'
         TEST_LOCAL_PORT = 8888
+        DOCKERHUB_CREDS = credentials('dockerhub')
     }
 
     parameters {
@@ -50,7 +51,7 @@ pipeline {
         stage('Push Images To DockerHUb') {
             steps {
                 echo "Login to Docker HUB"
-                sh "docker login -u ${DOCKER_USR} -p ${DOCKER_PSW}"
+                sh "docker login --username $DOCKERHUB_CREDS_USR --password $DOCKERHUB_CREDS_PSW"
                 echo "Push Maven Image vers DockerHUb"
                 sh "docker tag ${MAVEN_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_REG}/${MAVEN_IMAGE_NAME}:${DOCKER_TAG}"
                 sh "docker push ${DOCKER_REG}/${MAVEN_IMAGE_NAME}:${DOCKER_TAG}"
